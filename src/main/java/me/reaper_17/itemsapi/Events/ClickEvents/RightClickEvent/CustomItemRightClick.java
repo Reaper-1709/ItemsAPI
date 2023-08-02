@@ -1,4 +1,4 @@
-package me.reaper_17.itemsapi.Events;
+package me.reaper_17.itemsapi.Events.ClickEvents.RightClickEvent;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

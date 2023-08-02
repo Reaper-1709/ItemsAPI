@@ -1,4 +1,4 @@
-package me.reaper_17.itemsapi.Events;
+package me.reaper_17.itemsapi.Events.SwapEvent;
 
 import me.reaper_17.itemsapi.Utils.ItemConstructer;
 import org.bukkit.Bukkit;
@@ -15,7 +15,13 @@ public class CustomItemSwapListener implements Listener {
         Player player = e.getPlayer();
         ItemStack newItem = player.getInventory().getItem(e.getNewSlot());
         if (ItemConstructer.isCustomItem(newItem)){
-            Bukkit.getServer().getPluginManager().callEvent(new CustomItemSwap(player, newItem));
+            CustomItemSwap customEvent = new CustomItemSwap(player, newItem);
+            if (!customEvent.isCancelled()) {
+                Bukkit.getServer().getPluginManager().callEvent(customEvent);
+            }
+            else {
+                e.setCancelled(true);
+            }
         }
     }
 }
