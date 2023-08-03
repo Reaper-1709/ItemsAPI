@@ -5,13 +5,13 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-public class CustomItemSwap extends Event {
+public class CustomItemSwapEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
     private final ItemStack swappedItem;
     private boolean isCancelled = false;
 
-    public CustomItemSwap(Player player, ItemStack swappedItem) {
+    public CustomItemSwapEvent(Player player, ItemStack swappedItem) {
         this.player = player;
         this.swappedItem = swappedItem;
     }

@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-public class CustomItemDamagePlayer extends Event {
+public class CustomItemDamagePlayerEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private final Player damager;
@@ -14,7 +14,7 @@ public class CustomItemDamagePlayer extends Event {
     private final ItemStack weapon;
     private static boolean isCancelled;
 
-    public CustomItemDamagePlayer(Player damager, Player damagedPlayer, double damage, ItemStack weapon) {
+    public CustomItemDamagePlayerEvent(Player damager, Player damagedPlayer, double damage, ItemStack weapon) {
         this.damager = damager;
         this.damagedPlayer = damagedPlayer;
         this.damage = damage;

@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 public class CustomItemDamagePlayerListener implements Listener {
 
@@ -20,7 +19,7 @@ public class CustomItemDamagePlayerListener implements Listener {
             if (damagerE instanceof Player){
                 Player damager = (Player) e.getDamager();
                 if (ItemConstructer.isCustomItem(damager.getInventory().getItemInMainHand())){
-                    CustomItemDamagePlayer customEvent = new CustomItemDamagePlayer(damager, damagedPlayer, e.getDamage(), damager.getInventory().getItemInMainHand());
+                    CustomItemDamagePlayerEvent customEvent = new CustomItemDamagePlayerEvent(damager, damagedPlayer, e.getDamage(), damager.getInventory().getItemInMainHand());
                     if (!customEvent.isCancelled()){
                         Bukkit.getServer().getPluginManager().callEvent(customEvent);
                     }

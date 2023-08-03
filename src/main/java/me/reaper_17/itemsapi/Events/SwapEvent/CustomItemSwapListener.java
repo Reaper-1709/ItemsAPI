@@ -15,7 +15,7 @@ public class CustomItemSwapListener implements Listener {
         Player player = e.getPlayer();
         ItemStack newItem = player.getInventory().getItem(e.getNewSlot());
         if (ItemConstructer.isCustomItem(newItem)){
-            CustomItemSwap customEvent = new CustomItemSwap(player, newItem);
+            CustomItemSwapEvent customEvent = new CustomItemSwapEvent(player, newItem);
             if (!customEvent.isCancelled()) {
                 Bukkit.getServer().getPluginManager().callEvent(customEvent);
             }

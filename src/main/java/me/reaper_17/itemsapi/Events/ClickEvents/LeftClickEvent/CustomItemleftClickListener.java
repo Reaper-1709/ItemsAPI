@@ -1,6 +1,6 @@
 package me.reaper_17.itemsapi.Events.ClickEvents.LeftClickEvent;
 
-import me.reaper_17.itemsapi.Events.ClickEvents.RightClickEvent.CustomItemRightClick;
+import me.reaper_17.itemsapi.Events.ClickEvents.RightClickEvent.CustomItemRightClickEvent;
 import me.reaper_17.itemsapi.Utils.ItemConstructer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -14,7 +14,7 @@ public class CustomItemleftClickListener implements Listener {
     public void onCustomItemRightClick(PlayerInteractEvent e){
         if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK){
             if (ItemConstructer.isCustomItem(e.getPlayer().getInventory().getItemInMainHand())){
-                CustomItemRightClick customEvent = new CustomItemRightClick(e.getPlayer(), e.getPlayer().getInventory().getItemInMainHand());
+                CustomItemRightClickEvent customEvent = new CustomItemRightClickEvent(e.getPlayer(), e.getPlayer().getInventory().getItemInMainHand());
 
                 if (!customEvent.isCancelled()) {
                     Bukkit.getServer().getPluginManager().callEvent(customEvent);

@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-public class CustomItemRightClick extends Event {
+public class CustomItemRightClickEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private final Player clicker;
@@ -13,7 +13,7 @@ public class CustomItemRightClick extends Event {
     private boolean isCancelled = false;
     private boolean consumeItem = false;
 
-    public CustomItemRightClick(Player clicker, ItemStack clickedItem) {
+    public CustomItemRightClickEvent(Player clicker, ItemStack clickedItem) {
         this.clicker = clicker;
         this.clickedItem = clickedItem;
     }

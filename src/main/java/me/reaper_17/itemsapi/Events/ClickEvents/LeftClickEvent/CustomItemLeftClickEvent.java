@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-public class CustomItemLeftClick extends Event {
+public class CustomItemLeftClickEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private final Player clicker;
@@ -13,7 +13,7 @@ public class CustomItemLeftClick extends Event {
     private boolean isCancelled = false;
     private boolean consumeItem = false;
 
-    public CustomItemLeftClick(Player clicker, ItemStack clickedItem) {
+    public CustomItemLeftClickEvent(Player clicker, ItemStack clickedItem) {
         this.clicker = clicker;
         this.clickedItem = clickedItem;
     }
