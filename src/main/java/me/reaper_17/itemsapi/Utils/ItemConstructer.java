@@ -6,6 +6,7 @@ import me.reaper_17.itemsapi.Data.EnchantmentConfigurator;
 import me.reaper_17.itemsapi.Data.ItemType;
 import me.reaper_17.itemsapi.ItemsAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -16,12 +17,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class ItemConstructer {
     private static int lastSerialNumber = 0;
+    private static ArrayList<ItemStack> customItemsList = new ArrayList<>();
     private static final NamespacedKey SERIAL_NUMBER_KEY = new NamespacedKey(ItemsAPI.getInstance(), "serial_number");
     private static final NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(ItemsAPI.getInstance(), "item_type");
     private static final NamespacedKey CUSTOM_BOOLEAN_KEY = new NamespacedKey(ItemsAPI.getInstance(), "custom_boolean");
@@ -34,10 +34,13 @@ public class ItemConstructer {
         ArrayList<String> lores = new ArrayList<>();
         Collections.addAll(lores, lore);
         meta.setLore(lores);
+        lastSerialNumber = ItemsAPI.getInstance().getLastSerialNumber();
 
         meta.getPersistentDataContainer().set(ITEM_TYPE_KEY, PersistentDataType.STRING, itemType.name());
         meta.getPersistentDataContainer().set(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER, lastSerialNumber += 1);
         meta.getPersistentDataContainer().set(CUSTOM_BOOLEAN_KEY, PersistentDataType.BYTE, (byte) 1);
+
+        ItemsAPI.getInstance().setLastSerialNumber(lastSerialNumber);
 
         for (ItemFlag flag : flags){
             meta.addItemFlags(flag);
@@ -103,8 +106,12 @@ public class ItemConstructer {
     }
 
     //getters:
-    public static int getSerialNumber(){
-        return lastSerialNumber;
+    public static int getSerialNumber(ItemStack item){
+        if (item.getItemMeta().getPersistentDataContainer().has(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER)) {
+            return item.getItemMeta().getPersistentDataContainer().get(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER);
+        }
+        System.out.println(ChatColor.RED + "Error occurred:Item provided is not a custom item");
+        return -1;
     }
 
     public static Material getMaterial(ItemStack item) {
@@ -130,19 +137,37 @@ public class ItemConstructer {
         return new String[0];
     }
 
+    public static ItemStack getCustomItem(int serialNumber) {
+        for (ItemStack item : customItemsList) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null && meta.getPersistentDataContainer().has(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER)) {
+                int itemSerialNumber = meta.getPersistentDataContainer().get(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER);
+                if (itemSerialNumber == serialNumber) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+
     public static boolean isUnbreakable(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         return meta != null && meta.isUnbreakable();
     }
 
-    public static java.util.Map<Enchantment, Integer> getEnchantments(ItemStack item){
+    public static Map<Enchantment, Integer> getEnchantments(ItemStack item){
         ItemMeta meta = item.getItemMeta();
-        return meta.getEnchants();
+        return Objects.requireNonNull(meta).getEnchants();
+    }
+
+    public static ArrayList<ItemStack> getCustomItemsList(){
+        return customItemsList;
     }
 
     public static Multimap<Attribute, AttributeModifier> getAttributes(ItemStack item){
         ItemMeta meta = item.getItemMeta();
-        return meta.getAttributeModifiers();
+        return Objects.requireNonNull(meta).getAttributeModifiers();
     }
 
     public static boolean isCustomItem(ItemStack item) {
@@ -242,5 +267,16 @@ public class ItemConstructer {
             }
             item.setItemMeta(meta);
         }
+    }
+
+    public static String getSerialNumbers(){
+        String items = "";
+        for (ItemStack i : customItemsList){
+            if (i.getItemMeta().getPersistentDataContainer().has(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER)) {
+                items = items + String.valueOf(i.getItemMeta().getPersistentDataContainer().get(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER)) + "-" + i.getItemMeta().getDisplayName();
+            }
+        }
+        items = "{" + items + "}";
+        return items;
     }
 }
