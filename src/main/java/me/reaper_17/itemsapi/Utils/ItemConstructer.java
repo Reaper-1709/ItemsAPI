@@ -33,67 +33,74 @@ public class ItemConstructer {
     }
 
 
-    public static ItemStack constructItem(ItemType itemType, Material material, String displayName, String[] lore, EnchantmentConfigurator[] enchants, ItemFlag[] flags, AttributeConfigurator[] attributes, boolean isUnbreakable){
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(displayName);
-        ArrayList<String> lores = new ArrayList<>();
-        Collections.addAll(lores, lore);
-        meta.setLore(lores);
-        lastSerialNumber = ItemsAPI.getInstance().getLastSerialNumber();
+    public static ItemStack constructItem(ItemType itemType, Material material, String displayName, String[] lore, EnchantmentConfigurator[] enchants, ItemFlag[] flags, AttributeConfigurator[] attributes, boolean isUnbreakable) {
+        ItemStack item = null;
+        if (ItemsAPI.getInstance() != null) {
+            lastSerialNumber = ItemsAPI.getInstance().getLastSerialNumber();
+            item = new ItemStack(material);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(displayName);
+            ArrayList<String> lores = new ArrayList<>();
+            Collections.addAll(lores, lore);
+            meta.setLore(lores);
+            lastSerialNumber = ItemsAPI.getInstance().getLastSerialNumber();
 
-        meta.getPersistentDataContainer().set(ITEM_TYPE_KEY, PersistentDataType.STRING, itemType.name());
-        meta.getPersistentDataContainer().set(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER, lastSerialNumber += 1);
-        meta.getPersistentDataContainer().set(CUSTOM_BOOLEAN_KEY, PersistentDataType.BYTE, (byte) 1);
+            meta.getPersistentDataContainer().set(ITEM_TYPE_KEY, PersistentDataType.STRING, itemType.name());
+            meta.getPersistentDataContainer().set(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER, lastSerialNumber += 1);
+            meta.getPersistentDataContainer().set(CUSTOM_BOOLEAN_KEY, PersistentDataType.BYTE, (byte) 1);
 
-        ItemsAPI.getInstance().setLastSerialNumber(lastSerialNumber);
+            ItemsAPI.getInstance().setLastSerialNumber(lastSerialNumber);
 
-        for (ItemFlag flag : flags){
-            meta.addItemFlags(flag);
-        }
+            for (ItemFlag flag : flags) {
+                meta.addItemFlags(flag);
+            }
 
-        if (enchants != null) {
-            for (EnchantmentConfigurator enchantConfigurator : enchants) {
-                if (enchantConfigurator != null) {
-                    Enchantment enchantment = enchantConfigurator.getEnchantment();
-                    int level = enchantConfigurator.getLevel();
-                    boolean forceLevel = enchantConfigurator.isForceLvl();
-                    if (enchantment != null && level > 0) {
-                        if (forceLevel) {
-                            meta.addEnchant(enchantment, level, true);
-                        } else {
-                            int maxLevel = enchantment.getMaxLevel();
-                            if (level > maxLevel) {
-                                level = maxLevel;
+            if (enchants != null) {
+                for (EnchantmentConfigurator enchantConfigurator : enchants) {
+                    if (enchantConfigurator != null) {
+                        Enchantment enchantment = enchantConfigurator.getEnchantment();
+                        int level = enchantConfigurator.getLevel();
+                        boolean forceLevel = enchantConfigurator.isForceLvl();
+                        if (enchantment != null && level > 0) {
+                            if (forceLevel) {
+                                meta.addEnchant(enchantment, level, true);
+                            } else {
+                                int maxLevel = enchantment.getMaxLevel();
+                                if (level > maxLevel) {
+                                    level = maxLevel;
+                                }
+                                meta.addEnchant(enchantment, level, false);
                             }
-                            meta.addEnchant(enchantment, level, false);
                         }
                     }
                 }
             }
-        }
 
-        if (attributes != null) {
-            for (AttributeConfigurator attributeConfigurator : attributes) {
-                if (attributeConfigurator != null) {
-                    Attribute attribute = attributeConfigurator.getAttribute();
-                    double amount = attributeConfigurator.getAttributeModifier().getAmount();
-                    AttributeModifier.Operation operation = attributeConfigurator.getAttributeModifier().getOperation();
-                    if (attribute != null) {
-                        AttributeModifier attributeModifier = new AttributeModifier(
-                                attributeConfigurator.getAttributeModifier().getUniqueId(),
-                                attributeConfigurator.getAttributeModifier().getName(),
-                                amount,
-                                operation
-                        );
-                        meta.addAttributeModifier(attribute, attributeModifier);
+            if (attributes != null) {
+                for (AttributeConfigurator attributeConfigurator : attributes) {
+                    if (attributeConfigurator != null) {
+                        Attribute attribute = attributeConfigurator.getAttribute();
+                        double amount = attributeConfigurator.getAttributeModifier().getAmount();
+                        AttributeModifier.Operation operation = attributeConfigurator.getAttributeModifier().getOperation();
+                        if (attribute != null) {
+                            AttributeModifier attributeModifier = new AttributeModifier(
+                                    attributeConfigurator.getAttributeModifier().getUniqueId(),
+                                    attributeConfigurator.getAttributeModifier().getName(),
+                                    amount,
+                                    operation
+                            );
+                            meta.addAttributeModifier(attribute, attributeModifier);
+                        }
                     }
                 }
             }
-        }
-        meta.setUnbreakable(isUnbreakable);
+            meta.setUnbreakable(isUnbreakable);
 
-        item.setItemMeta(meta);
+            item.setItemMeta(meta);
+        }
+        else {
+            Bukkit.getLogger().warning("ItemsAPI instance is null, unable to construct custom item.");
+        }
         return item;
     }
 
