@@ -52,6 +52,7 @@ public final class ItemsAPI extends JavaPlugin {
         }
         ItemConstructer.initializeKeys(this);
         Bukkit.getLogger().info("ItemsAPI started");
+        Bukkit.getLogger().info(instance.toString());
     }
     @Override
     public void onDisable() {

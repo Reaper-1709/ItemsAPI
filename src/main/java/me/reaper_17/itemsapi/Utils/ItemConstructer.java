@@ -34,7 +34,7 @@ public class ItemConstructer {
 
 
     public static ItemStack constructItem(ItemType itemType, Material material, String displayName, String[] lore, EnchantmentConfigurator[] enchants, ItemFlag[] flags, AttributeConfigurator[] attributes, boolean isUnbreakable) {
-        ItemStack item = null;
+        ItemStack item = new ItemStack(material);
         if (ItemsAPI.getInstance() != null) {
             lastSerialNumber = ItemsAPI.getInstance().getLastSerialNumber();
             item = new ItemStack(material);
@@ -102,6 +102,7 @@ public class ItemConstructer {
             Bukkit.getLogger().warning("ItemsAPI instance is null, unable to construct custom item.");
         }
         Bukkit.getLogger().info("Item successfully constructed");
+        customItemsList.add(item);
         return item;
     }
 
