@@ -101,6 +101,7 @@ public class ItemConstructer {
         else {
             Bukkit.getLogger().warning("ItemsAPI instance is null, unable to construct custom item.");
         }
+        Bukkit.getLogger().info("Item successfully constructed");
         return item;
     }
 
@@ -160,6 +161,7 @@ public class ItemConstructer {
                 }
             }
         }
+        Bukkit.getLogger().warning("couldnt find item");
         return null;
     }
 
