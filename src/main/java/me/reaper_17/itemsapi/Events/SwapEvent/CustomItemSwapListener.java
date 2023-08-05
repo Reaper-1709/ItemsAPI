@@ -14,12 +14,11 @@ public class CustomItemSwapListener implements Listener {
     public void onPlayerSwapItem(PlayerItemHeldEvent e){
         Player player = e.getPlayer();
         ItemStack newItem = player.getInventory().getItem(e.getNewSlot());
-        if (ItemConstructer.isCustomItem(newItem)){
+        if (newItem != null && ItemConstructer.isCustomItem(newItem)) {
             CustomItemSwapEvent customEvent = new CustomItemSwapEvent(player, newItem);
             if (!customEvent.isCancelled()) {
                 Bukkit.getServer().getPluginManager().callEvent(customEvent);
-            }
-            else {
+            } else {
                 e.setCancelled(true);
             }
         }

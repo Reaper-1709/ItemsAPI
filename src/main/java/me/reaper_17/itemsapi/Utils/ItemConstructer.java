@@ -25,31 +25,33 @@ public class ItemConstructer {
     private static NamespacedKey SERIAL_NUMBER_KEY;
     private static NamespacedKey ITEM_TYPE_KEY;
     private static NamespacedKey CUSTOM_BOOLEAN_KEY;
+    private static NamespacedKey ENCHANTS_KEY;
+    private static NamespacedKey ATTRIBUTES_KEY;
+    private static String enchantsToString;
+    private static String attributesToString;
 
     public static void initializeKeys(ItemsAPI plugin) {
         SERIAL_NUMBER_KEY = new NamespacedKey(plugin, "serial_number");
         ITEM_TYPE_KEY = new NamespacedKey(plugin, "item_type");
         CUSTOM_BOOLEAN_KEY = new NamespacedKey(plugin, "custom_boolean");
+        ENCHANTS_KEY = new NamespacedKey(plugin, "enchants_conf");
+        ATTRIBUTES_KEY = new NamespacedKey(plugin, "attributes_conf");
     }
 
 
     public static ItemStack constructItem(ItemType itemType, Material material, String displayName, String[] lore, EnchantmentConfigurator[] enchants, ItemFlag[] flags, AttributeConfigurator[] attributes, boolean isUnbreakable) {
         ItemStack item = new ItemStack(material);
         if (ItemsAPI.getInstance() != null) {
-            lastSerialNumber = ItemsAPI.getInstance().getLastSerialNumber();
             item = new ItemStack(material);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(displayName);
             ArrayList<String> lores = new ArrayList<>();
             Collections.addAll(lores, lore);
             meta.setLore(lores);
-            lastSerialNumber = ItemsAPI.getInstance().getLastSerialNumber();
 
             meta.getPersistentDataContainer().set(ITEM_TYPE_KEY, PersistentDataType.STRING, itemType.name());
             meta.getPersistentDataContainer().set(SERIAL_NUMBER_KEY, PersistentDataType.INTEGER, lastSerialNumber += 1);
             meta.getPersistentDataContainer().set(CUSTOM_BOOLEAN_KEY, PersistentDataType.BYTE, (byte) 1);
-
-            ItemsAPI.getInstance().setLastSerialNumber(lastSerialNumber);
 
             for (ItemFlag flag : flags) {
                 meta.addItemFlags(flag);
@@ -75,6 +77,18 @@ public class ItemConstructer {
                     }
                 }
             }
+
+            String enchantsString = null;
+            if (enchants != null) {
+                enchantsString = getEnchantmentsString(enchants);
+            }
+            meta.getPersistentDataContainer().set(ENCHANTS_KEY, PersistentDataType.STRING, enchantsString);
+
+            String attributesString = null;
+            if (attributes != null) {
+                attributesString = getAttributesString(attributes);
+            }
+            meta.getPersistentDataContainer().set(ATTRIBUTES_KEY, PersistentDataType.STRING, attributesString);
 
             if (attributes != null) {
                 for (AttributeConfigurator attributeConfigurator : attributes) {
@@ -105,6 +119,57 @@ public class ItemConstructer {
         customItemsList.add(item);
         return item;
     }
+
+    private static String getEnchantmentsString(EnchantmentConfigurator[] enchants) {
+        StringBuilder enchantmentsString = new StringBuilder("{");
+        for (EnchantmentConfigurator enchantConfigurator : enchants) {
+            if (enchantConfigurator != null) {
+                Enchantment enchantment = enchantConfigurator.getEnchantment();
+                int level = enchantConfigurator.getLevel();
+                boolean forceLevel = enchantConfigurator.isForceLvl();
+                if (enchantment != null && level > 0) {
+                    enchantmentsString
+                            .append(enchantment.getName())
+                            .append("-")
+                            .append(level)
+                            .append("-")
+                            .append(forceLevel ? "forced" : "not-forced")
+                            .append(", ");
+                }
+            }
+        }
+        if (enchantmentsString.length() > 1) {
+            enchantmentsString.delete(enchantmentsString.length() - 2, enchantmentsString.length()); // Remove the trailing ", "
+        }
+        enchantmentsString.append("}");
+        return enchantmentsString.toString();
+    }
+
+    private static String getAttributesString(AttributeConfigurator[] attributes) {
+        StringBuilder attributesString = new StringBuilder("{");
+        for (AttributeConfigurator attributeConfigurator : attributes) {
+            if (attributeConfigurator != null) {
+                Attribute attribute = attributeConfigurator.getAttribute();
+                double amount = attributeConfigurator.getAttributeModifier().getAmount();
+                AttributeModifier.Operation operation = attributeConfigurator.getAttributeModifier().getOperation();
+                if (attribute != null) {
+                    attributesString
+                            .append(attribute.name())
+                            .append("-")
+                            .append(amount)
+                            .append("-")
+                            .append(operation.toString())
+                            .append(", ");
+                }
+            }
+        }
+        if (attributesString.length() > 1) {
+            attributesString.delete(attributesString.length() - 2, attributesString.length());
+        }
+        attributesString.append("}");
+        return attributesString.toString();
+    }
+
 
     public static ItemType getItemType(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
