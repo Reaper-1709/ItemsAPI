@@ -50,6 +50,7 @@ public final class ItemsAPI extends JavaPlugin {
             config.set("lastSerialNumber", 0);
             saveConfig();
         }
+        ItemConstructer.initializeKeys(this);
     }
     @Override
     public void onDisable() {

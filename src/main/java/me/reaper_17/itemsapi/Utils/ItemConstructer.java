@@ -22,9 +22,15 @@ import java.util.*;
 public class ItemConstructer {
     private static int lastSerialNumber = 0;
     private static ArrayList<ItemStack> customItemsList = new ArrayList<>();
-    private static final NamespacedKey SERIAL_NUMBER_KEY = new NamespacedKey(ItemsAPI.getInstance(), "serial_number");
-    private static final NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(ItemsAPI.getInstance(), "item_type");
-    private static final NamespacedKey CUSTOM_BOOLEAN_KEY = new NamespacedKey(ItemsAPI.getInstance(), "custom_boolean");
+    private static NamespacedKey SERIAL_NUMBER_KEY;
+    private static NamespacedKey ITEM_TYPE_KEY;
+    private static NamespacedKey CUSTOM_BOOLEAN_KEY;
+
+    public static void initializeKeys(ItemsAPI plugin) {
+        SERIAL_NUMBER_KEY = new NamespacedKey(plugin, "serial_number");
+        ITEM_TYPE_KEY = new NamespacedKey(plugin, "item_type");
+        CUSTOM_BOOLEAN_KEY = new NamespacedKey(plugin, "custom_boolean");
+    }
 
 
     public static ItemStack constructItem(ItemType itemType, Material material, String displayName, String[] lore, EnchantmentConfigurator[] enchants, ItemFlag[] flags, AttributeConfigurator[] attributes, boolean isUnbreakable){
