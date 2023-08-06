@@ -1,0 +1,4 @@
+name: APIModule
+version: '${project.version}'
+main: me.reaper_17.apimodule.APIModule
+api-version: 1.19
