@@ -26,7 +26,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Objects;
@@ -36,7 +35,6 @@ import static org.bukkit.persistence.PersistentDataType.INTEGER;
 
 public final class ItemsAPI extends JavaPlugin {
     private static ItemsAPI instance;
-    private File configFile;
     private boolean printCustomItemsSerialNumber = true;
 
     @Override
