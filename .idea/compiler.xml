@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="plugin" />
         <module name="ItemsAPI" />
-        <module name="API" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
