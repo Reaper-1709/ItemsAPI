@@ -189,6 +189,4 @@ public final class ItemsAPI extends JavaPlugin {
         return instance;
     }
 }
-    //todo: add all values to an sql database
     //todo: fix all errors
-    //todo: become a dev at fakepixel :tada:
