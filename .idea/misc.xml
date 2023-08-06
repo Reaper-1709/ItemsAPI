@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/APIModule/pom.xml" />
         <option value="$PROJECT_DIR$/pluginModule/pom.xml" />
+        <option value="$PROJECT_DIR$/API/pom.xml" />
       </list>
     </option>
   </component>
