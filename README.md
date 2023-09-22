@@ -1,6 +1,6 @@
 # ItemsAPI
 Items API is an API with custom item constructor and events.
-Note: This is a developer application to fakepixel.
+Note: This project is not going to be worked on for a long time. Pull Requests are welcome :)
 
 This project is currently under work. Documentation and stuffs will be released soon.
 
